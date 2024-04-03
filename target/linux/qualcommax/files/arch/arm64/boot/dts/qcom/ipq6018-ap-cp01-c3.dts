@@ -91,11 +91,9 @@
 };
 
 &dp1 {
-		compatible = "qcom,nss-dp";
-		device_type = "network";
-		local-mac-address = [e4 d1 24 8c f5 bf];
-		qcom,id = <1>;
-		phy-handle = <&phy0>;
+		status = "okay";
+
+		phy-handle = <&phy6>;
 		phy-mode = "sgmii";
 		label = "lan";
 };
@@ -104,10 +102,9 @@
 	status = "okay";
 	pinctrl-0 = <&mdio_pins>;
 	pinctrl-names = "default";
-	phy-reset-gpio = <0x0c 0x4b 0x00>;
-	compatible = "qcom,qca-mdio", "qcom,ipq40xx-mdio";
+	reset-gpios = <&tlmm 75 GPIO_ACTIVE_LOW>;
 	
-	phy0: ethernet-phy@0 {
+	phy6: ethernet-phy@6 {
 		reg = <0x6>;
 	};
 };
@@ -115,17 +112,13 @@
 &switch {
 	status = "okay";
 
-	switch_lan_bmp = <0x02>;
-	switch_wan_bmp = <0x02>;
-	switch_mac_mode = <0x0f>;
-	switch_mac_mode1 = <0x0f>;
-	switch_mac_mode2 = <0xff>;
+	switch_lan_bmp = <ESS_PORT1>;
+	switch_mac_mode = <MAC_MODE_SGMII_CHANNEL0>;
 
 	qcom,port_phyinfo {
-		port@0 {
-			port_id = <0x01>;
-			phy_address = <0x06>;
-			port_mac_sel = "QGMAC_PORT";
+		port@1 {
+			port_id = <1>;
+			phy_address = <6>;
 		};
 	};
 };
