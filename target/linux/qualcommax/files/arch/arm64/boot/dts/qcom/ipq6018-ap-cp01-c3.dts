@@ -124,6 +124,141 @@
 };
 
 
+&spi {
+		cs-select = <0x00>;
+		dma-names = "tx", "rx";
+		pinctrl-0 = <0x0f>;
+		pinctrl-names = "default";
+		spi-max-frequency = <0x2faf080>;
+		reg = <0x78b5000 0x600>;
+		status = "ok";
+		
+		flash@0 {
+			density = <0x1000000>;
+			sector-size = <0x10000>;
+			spi-max-frequency = <0x2faf080>;
+			compatible = "n25q128a11";
+			linux,modalias = "m25p80", "n25q128a11";
+			use-default-sizes;
+			
+			partitions {
+			
+				compatible = "fixed-partitions";
+				
+				partition@0 {
+					label = "0:SBL1";
+					reg = <0x00 0xc0000>;
+				};
+
+				partition@110000 {
+					label = "0:QSEE";
+					reg = <0x110000 0x1a0000>;
+				};
+
+				partition@1760000 {
+					label = "CONFIG";
+					reg = <0x1760000 0x400000>;
+				};
+
+				partition@1b60000 {
+					label = "LOGGING";
+					reg = <0x1b60000 0x100000>;
+				};
+
+				partition@1c60000 {
+					label = "DEVCERT";
+					reg = <0x1c60000 0x20000>;
+				};
+
+				partition@1c80000 {
+					label = "RESERVED";
+					reg = <0x1c80000 0x380000>;
+				};
+
+				partition@2b0000 {
+					label = "0:QSEE_1";
+					reg = <0x2b0000 0x1a0000>;
+				};
+
+				partition@450000 {
+					label = "0:DEVCFG";
+					reg = <0x450000 0x10000>;
+				};
+
+				partition@460000 {
+					label = "0:DEVCFG_1";
+					reg = <0x460000 0x10000>;
+				};
+
+				partition@470000 {
+					label = "0:RPM";
+					reg = <0x470000 0x40000>;
+				};
+
+				partition@4b0000 {
+					label = "0:RPM_1";
+					reg = <0x4b0000 0x40000>;
+				};
+
+				partition@4f0000 {
+					label = "0:uboot_env";
+					reg = <0x4f0000 0x10000>;
+				};
+
+				partition@500000 {
+					label = "0:CDT_1";
+					reg = <0x500000 0x10000>;
+				};
+
+				partition@510000 {
+					label = "0:APPSBLENV";
+					reg = <0x510000 0x10000>;
+				};
+
+				partition@520000 {
+					label = "0:APPSBL";
+					reg = <0x520000 0x100000>;
+				};
+
+				partition@620000 {
+					label = "0:APPSBL_1";
+					reg = <0x620000 0x100000>;
+				};
+
+				partition@720000 {
+					label = "0:ART";
+					reg = <0x720000 0x40000>;
+				};
+
+				partition@760000 {
+					label = "firmware";
+					reg = <0x760000 0x800000>;
+				};
+
+				partition@c0000 {
+					label = "0:MIBIB";
+					reg = <0xc0000 0x10000>;
+				};
+
+				partition@d0000 {
+					label = "0:BOOTCONFIG";
+					reg = <0xd0000 0x20000>;
+				};
+
+				partition@f0000 {
+					label = "0:BOOTCONFIG1";
+					reg = <0xf0000 0x20000>;
+				};
+
+				partition@f60000 {
+					label = "HL_backup1";
+					reg = <0xf60000 0x800000>;
+				};
+			};
+		};
+	};
+};
+
 &qpic_bam {
 	status = "okay";
 };
@@ -140,6 +275,16 @@
 
 		partitions {
 			compatible = "qcom,smem-part";
+			
+			partition@0 {
+				label = "rootfs";
+				reg = <0x00 0x10000000>;
+			};
+			
+			partition@10000000 {
+				label = "rootfs_1";
+				reg = <0x10000000 0x10000000>;
+			};
 		};
 	};
 };
