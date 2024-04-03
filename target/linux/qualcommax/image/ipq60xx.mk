@@ -39,3 +39,15 @@ define Device/yuncore_fap650
 endef
 TARGET_DEVICES += yuncore_fap650
 
+define Device/arista_ap-cp01-c3
+       $(call Device/FitImage)
+       $(call Device/UbiFit)
+       DEVICE_VENDOR := Arista
+       DEVICE_MODEL := ap-cp01-c3
+       BLOCKSIZE := 128k
+       PAGESIZE := 2048
+       SOC := ipq6018
+       DEVICE_PACKAGES := ipq-wifi-arista_ap-cp01-c3
+endef
+
+TARGET_DEVICES += arista_ap-cp01-c3

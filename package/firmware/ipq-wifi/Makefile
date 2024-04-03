@@ -59,7 +59,8 @@ ALLWIFIBOARDS:= \
 	zte_mf269 \
 	zte_mf287 \
 	zte_mf287plus \
-	zyxel_nbg7815
+	zyxel_nbg7815 \
+	arista_ap-cp01-c3
 
 ALLWIFIPACKAGES:=$(foreach BOARD,$(ALLWIFIBOARDS),ipq-wifi-$(BOARD))
 
@@ -182,5 +183,6 @@ $(eval $(call generate-ipq-wifi-package,zte_mf269,ZTE MF269))
 $(eval $(call generate-ipq-wifi-package,zte_mf287,ZTE MF287))
 $(eval $(call generate-ipq-wifi-package,zte_mf287plus,ZTE MF287Plus))
 $(eval $(call generate-ipq-wifi-package,zyxel_nbg7815,Zyxel NBG7815))
+$(eval $(call generate-ipq-wifi-package,arista_ap-cp01-c3,Arista C200P))
 
 $(foreach PACKAGE,$(ALLWIFIPACKAGES),$(eval $(call BuildPackage,$(PACKAGE))))
