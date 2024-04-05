@@ -84,6 +84,35 @@
 			bias-pull-up;
 		};
 	};
+		
+		
+		spi_0_pins: spi-0-pins {
+		
+			pins = "gpio38", "gpio39", "gpio40", "gpio41";
+			function = "blsp0_spi";
+			drive-strength = <8>;
+			bias-pull-down;
+		
+		};
+		
+		spi_1_pins {
+				linux,phandle = <0x10>;
+				phandle = <0x10>;
+
+				mux {
+					bias-pull-down;
+					drive-strength = <0x08>;
+					function = "blsp1_spi";
+					pins = "gpio69", "gpio71", "gpio72";
+				};
+
+				spi_chipselect: spi_cs {
+					bias-disable;
+					drive-strength = <0x08>;
+					function = "blsp1_spi";
+					pins = "gpio70";
+				};
+			};
 };
 
 &edma {
@@ -123,36 +152,28 @@
 	};
 };
 
+&blsp1_spi1 {
 
-&spi {
-		cs-select = <0x00>;
-		dma-names = "tx", "rx";
-		pinctrl-0 = <0x0f>;
+		pinctrl-0 = <&spi_0_pins>;
 		pinctrl-names = "default";
-		spi-max-frequency = <0x2faf080>;
-		reg = <0x78b5000 0x600>;
-		status = "ok";
+		status = "okay";
+		cs-select = <&spi_chipselect>;
 		
 		flash@0 {
-			density = <0x1000000>;
-			sector-size = <0x10000>;
 			spi-max-frequency = <0x2faf080>;
-			compatible = "n25q128a11";
-			linux,modalias = "m25p80", "n25q128a11";
-			use-default-sizes;
-			
-			partitions {
-			
-				compatible = "fixed-partitions";
+			compatible = "jedec,spi-nor";
+			reg = <0x00>;
 				
 				partition@0 {
 					label = "0:SBL1";
 					reg = <0x00 0xc0000>;
+					read-only;
 				};
 
 				partition@110000 {
 					label = "0:QSEE";
 					reg = <0x110000 0x1a0000>;
+					read-only;
 				};
 
 				partition@1760000 {
@@ -201,7 +222,7 @@
 				};
 
 				partition@4f0000 {
-					label = "0:uboot_env";
+					label = "0:CDT";
 					reg = <0x4f0000 0x10000>;
 				};
 
@@ -211,7 +232,7 @@
 				};
 
 				partition@510000 {
-					label = "0:APPSBLENV";
+					label = "0:uboot_env";
 					reg = <0x510000 0x10000>;
 				};
 
@@ -226,8 +247,9 @@
 				};
 
 				partition@720000 {
-					label = "0:ART";
+					label = "0:art";
 					reg = <0x720000 0x40000>;
+					read-only;
 				};
 
 				partition@760000 {
@@ -254,8 +276,6 @@
 					label = "HL_backup1";
 					reg = <0xf60000 0x800000>;
 				};
-			};
-		};
 	};
 };
 
@@ -265,16 +285,14 @@
 
 &qpic_nand {
 	status = "okay";
+	
+		nand@0 {
+	
+			reg = <0>;
 
-	nand@0 {
-		reg = <0>;
-
-		nand-ecc-strength = <4>;
-		nand-ecc-step-size = <512>;
-		nand-bus-width = <8>;
-
-		partitions {
-			compatible = "qcom,smem-part";
+			nand-ecc-strength = <4>;
+			nand-ecc-step-size = <512>;
+			nand-bus-width = <8>;
 			
 			partition@0 {
 				label = "rootfs";
@@ -282,10 +300,9 @@
 			};
 			
 			partition@10000000 {
-				label = "rootfs_1";
+				label = "ubifs";
 				reg = <0x10000000 0x10000000>;
 			};
-		};
 	};
 };
 
