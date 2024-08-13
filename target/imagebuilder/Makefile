@@ -43,23 +43,28 @@ $(BIN_DIR)/$(IB_NAME).tar.zst: clean
 
 	$(INSTALL_DIR) $(PKG_BUILD_DIR)/packages
 
-ifeq ($(CONFIG_IB_STANDALONE),)
 ifneq ($(CONFIG_USE_APK),)
+  ifeq ($(CONFIG_IB_STANDALONE),)
 	$(call FeedSourcesAppendAPK,$(PKG_BUILD_DIR)/repositories)
 	$(VERSION_SED_SCRIPT) $(PKG_BUILD_DIR)/repositories
+  endif
+
+	$(INSTALL_DATA) ./files/README.apk.md $(PKG_BUILD_DIR)/packages/README.md
 else
+  ifeq ($(CONFIG_IB_STANDALONE),)
 	echo '## Remote package repositories' >> $(PKG_BUILD_DIR)/repositories.conf
 	$(call FeedSourcesAppendOPKG,$(PKG_BUILD_DIR)/repositories.conf)
 	$(VERSION_SED_SCRIPT) $(PKG_BUILD_DIR)/repositories.conf
 
+  endif
+
 	# create an empty package index so `opkg` doesn't report an error
 	touch $(PKG_BUILD_DIR)/packages/Packages
-	$(INSTALL_DATA) ./files/README.md $(PKG_BUILD_DIR)/packages/
+	$(INSTALL_DATA) ./files/README.opkg.md $(PKG_BUILD_DIR)/packages/README.md
 
 	echo ''                                                        >> $(PKG_BUILD_DIR)/repositories.conf
 	echo '## This is the local package repository, do not remove!' >> $(PKG_BUILD_DIR)/repositories.conf
 	echo 'src imagebuilder file:packages'                          >> $(PKG_BUILD_DIR)/repositories.conf
-endif
 endif
 
 ifeq ($(CONFIG_BUILDBOT),)
@@ -107,6 +112,9 @@ endif
 	-cp $(LINUX_DIR)/.config $(IB_LDIR)/
 	rm -f $(IB_KDIR)/root.*
 	rm -f $(IB_KDIR)/vmlinux.debug
+	# remove any file for initramfs and Per Device Rootfs initramfs files
+	rm -f $(IB_KDIR)/vmlinux-initramfs*
+	rm -f $(IB_KDIR)/Image-initramfs*
 	if [ -x $(LINUX_DIR)/scripts/dtc/dtc ]; then \
 		$(INSTALL_DIR) $(IB_LDIR)/scripts/dtc; \
 		$(INSTALL_BIN) $(LINUX_DIR)/scripts/dtc/dtc $(IB_LDIR)/scripts/dtc/dtc; \
